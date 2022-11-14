@@ -19,6 +19,14 @@ class EditarMenu extends Component
     public $imagen;
     public $imagen_nueva;
 
+    protected $rules = [
+        'nombre' => 'required',
+        'descripcion' => 'required',
+        'categoria' => 'required|numeric',
+        'precio' => 'required',
+        'imagen_nueva' => 'nullable|image|max:1024',
+    ];
+
 
     public function mount(Menu $menu)
     {
@@ -27,10 +35,35 @@ class EditarMenu extends Component
         $this->categoria = $menu->categoria_id;
         $this->descripcion = $menu->descripcion;
         $this->precio=$menu->precio;
-        
-       
-       
         $this->imagen = $menu->img;
+
+    }
+
+
+    public function submit(){
+        $datos = $this->validate();
+
+        if ($this->imagen_nueva) {
+            $imagen = $this->imagen_nueva->store('public/menu');
+            $datos['imagen'] = str_replace('public/menu/', '', $imagen);
+        }
+
+        $producto = Menu::find($this->menu_id);
+
+        $producto->nombre = $datos['nombre'];
+        $producto->categoria_id = $datos['categoria'];
+        $producto->precio = $datos['precio'];
+        $producto->descripcion = $datos['descripcion'];
+        $producto->img = $datos['imagen'] ?? $producto->img; 
+        $producto->save();
+
+        //crear un mensaje
+        session()->flash('message', 'Producto actualizado correctamente.');
+
+        //redireccionar
+        return redirect()->route('dashboard');
+
+
     }
 
     public function render()

@@ -2,10 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Categoria;
 use App\Models\Menu;
 use Livewire\Component;
+use App\Models\Categoria;
+use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic;
 
 class AgregarProducto extends Component
 {
@@ -24,13 +29,20 @@ class AgregarProducto extends Component
         'imagen' => 'required|image|max:1024',
     ];
 
-    public function submit(){
-         $datos = $this->validate();
+    public function submit()
+    {
+        $datos = $this->validate();
 
-        $imagen = $this->imagen->store('public/menu');
-        $datos['imagen'] = str_replace('public/menu/', '',$imagen);
+        $datos['imagen']->store('public/imagenes');
+        $imageName = $datos['imagen']->hashName();
+        $data['imagen'] = $imageName;
 
+        $manager = new ImageManager();
+        $image = $manager->make('storage/imagenes/'.$imageName)->resize(300,300);
+        $image->save('storage/imagenes-ajustadas/'.$imageName);
 
+        $datos['imagen'] = $imageName;
+      
         Menu::create([
             'nombre' => $datos['nombre'],
             'descripcion' => $datos['descripcion'],
@@ -38,18 +50,16 @@ class AgregarProducto extends Component
             'precio' => $datos['precio'],
             'disponibilidad' => true,
             'img' => $datos['imagen'],
-            
-            
-            ]);
-    
-    
-            //crear un mensaje
-            session()->flash('message', 'Producto agregado correctamente.');
-    
-            //redireccionar
-            return redirect()->route('dashboard');
 
 
+        ]);
+
+
+        //crear un mensaje
+        session()->flash('message', 'Producto agregado correctamente.');
+
+        //redireccionar
+        return redirect()->route('dashboard');
     }
 
 
@@ -57,7 +67,7 @@ class AgregarProducto extends Component
     public function render()
     {
         $categorias = Categoria::all();
-        return view('livewire.agregar-producto',[
+        return view('livewire.agregar-producto', [
             'categorias' => $categorias
         ]);
     }

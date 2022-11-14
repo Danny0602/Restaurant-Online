@@ -12,9 +12,21 @@ class MostrarMenu extends Component
       $menu->save();
     }
 
-    public function render()
+    protected $listeners  = ['eliminarMenu'];
+
+    public function eliminarMenu(Menu $menu)
     {
-        $productos = Menu::all();
+        // dd('eliminando');
+        $menu->delete();
+    }
+
+
+
+
+    public function render()
+    {        
+        $productos = Menu::paginate(5);
+
         return view('livewire.mostrar-menu',[
             'productos' => $productos
         ]);

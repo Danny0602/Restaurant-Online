@@ -44,7 +44,7 @@
                 <tr class="bg-white border-b">
 
                     <td scope="row" class="p-2 font-medium text-center text-gray-900 border w-28 whitespace-nowrap ">
-                        <img src="{{asset('storage/menu/'. $producto->img)}}" alt="">
+                        <img src="{{asset('storage/imagenes-ajustadas/'. $producto->img)}}" alt="">
                     </td>
                     <td class="text-base font-bold text-center text-gray-700 border">
                         {{$producto->nombre}}
@@ -84,9 +84,9 @@
             </tbody>
         </table>
 
-        {{-- <div class="my-5">
+        <div class="my-5">
             {{$productos->links()}}
-        </div> --}}
+        </div>
     </div>
 
     @push('scripts')
