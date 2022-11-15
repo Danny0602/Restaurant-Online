@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function __invoke(Request $request)
     {
-        return view('home.index');
+        $categorias = Categoria::all();
+        return view('home.index',[
+            'categorias' => $categorias
+        ]);
     }
 }

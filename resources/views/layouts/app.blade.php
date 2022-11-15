@@ -40,4 +40,14 @@
 @livewireScripts
 
 @stack('scripts')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+ 
+
+<script>
+    window.addEventListener('swal',function(e){
+          Swal.fire(e.detail);
+      });
+  
+  </script>
 </html>
