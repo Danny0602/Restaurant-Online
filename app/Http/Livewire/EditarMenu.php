@@ -2,10 +2,11 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Categoria;
 use App\Models\Menu;
 use Livewire\Component;
+use App\Models\Categoria;
 use Livewire\WithFileUploads;
+use Intervention\Image\ImageManager;
 
 class EditarMenu extends Component
 {
@@ -44,8 +45,15 @@ class EditarMenu extends Component
         $datos = $this->validate();
 
         if ($this->imagen_nueva) {
-            $imagen = $this->imagen_nueva->store('public/menu');
-            $datos['imagen'] = str_replace('public/menu/', '', $imagen);
+            $datos['imagen_nueva']->store('public/imagenes');
+            $imageName = $datos['imagen_nueva']->hashName();
+            $data['imagen_nueva'] = $imageName;
+    
+            $manager = new ImageManager();
+            $image = $manager->make('storage/imagenes/'.$imageName)->resize(300,300);
+            $image->save('storage/imagenes-ajustadas/'.$imageName);
+    
+            $datos['imagen_nueva'] = $imageName;
         }
 
         $producto = Menu::find($this->menu_id);
@@ -54,7 +62,7 @@ class EditarMenu extends Component
         $producto->categoria_id = $datos['categoria'];
         $producto->precio = $datos['precio'];
         $producto->descripcion = $datos['descripcion'];
-        $producto->img = $datos['imagen'] ?? $producto->img; 
+        $producto->img = $datos['imagen_nueva'] ?? $producto->img; 
         $producto->save();
 
         //crear un mensaje

@@ -4,6 +4,7 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Pago;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,11 @@ Route::get('/pagar',    [Pago::class,'index'] )->middleware(['auth', ])->name('p
 
 
 
+//NOTIFICACIONES
+Route::get('/notificaciones', NotificationController::class)->middleware([
+    'auth',
+    'rol'
+])->name('notificaciones');
 
 
 

@@ -13,7 +13,7 @@ class CatalogoProductos extends Component
 {
     
 
-    protected $listeners  = ['agregarProductoCarrito'];
+    protected $listeners  = ['agregarProductoCarrito','error'];
 
     public $categoria;
 
@@ -29,6 +29,15 @@ class CatalogoProductos extends Component
 
 
 
+    public function error(){
+        $this->dispatchBrowserEvent('swal', [
+            'title' => 'No se puede agregar al carrito',
+            'timer'=>4000,
+            'icon'=>'error',
+            'toast'=>true,
+            'position'=>'top-right'
+        ]);
+    }
 
     public function agregarProductoCarrito(Menu $menu)
     {

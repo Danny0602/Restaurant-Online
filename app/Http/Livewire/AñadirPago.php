@@ -2,8 +2,11 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Pedidos;
 use Livewire\Component;
+use App\Notifications\Pedidos;
+use App\Models\Pedidos as ModelsPedidos;
+use Illuminate\Support\Facades\Notification;
+
 
 class AñadirPago extends Component
 {
@@ -25,8 +28,9 @@ class AñadirPago extends Component
     public function submit(){
         $datos= $this->validate();
 
-        Pedidos::create([
+       $this->pedidos = ModelsPedidos::create([
             'user_id' => auth()->user()->id,
+            'admin' => 1,
             'pedido' => \Cart::getContent(),
             'tarjeta' => $datos['tarjeta'],
             'dia_tarjeta' => $datos['dia'],
@@ -34,7 +38,11 @@ class AñadirPago extends Component
 
         ]);
 
+        
+       
+        $this->pedidos->administrador->notify(new Pedidos(auth()->user()->name,\Cart::getContent()));
         \Cart::clear();
+
 
         session()->flash('message','Pedido Realizado Correctamente, Pasa a recogerlo');
 

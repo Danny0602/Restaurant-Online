@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('admin')->constrained()->onDelete('cascade');
             $table->text('pedido');
             $table->string('tarjeta');
             $table->string('dia_tarjeta');

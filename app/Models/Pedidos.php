@@ -13,7 +13,13 @@ class Pedidos extends Model
         'pedido',
         'tarjeta',
         'dia_tarjeta',
-        'mes_tarjeta'
+        'mes_tarjeta',
+        'admin'
+
 
     ];
+    public function administrador()
+    {
+        return $this->belongsTo(User::class, 'admin');
+    }
 }

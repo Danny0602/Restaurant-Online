@@ -20,7 +20,7 @@
                     <x-nav-link :href="route('productos.create')" :active="request()->routeIs('productos.create')">
                         {{ __('Agregar Producto') }}
                     </x-nav-link>
-                    
+
                     <x-nav-link :href="route('categorias.index')" :active="request()->routeIs('categorias.index')">
                         {{ __('Lista de categorias') }}
                     </x-nav-link>
@@ -51,11 +51,20 @@
                 </div>
                 @endguest
                 @auth
+
+                @if (auth()->user()->rol == 1)
+                <div class="flex items-center gap-2 p-3 ">
+                    <a class="flex flex-col items-center text-sm font-extrabold text-white bg-indigo-600 rounded-full w-7 hover:bg-indigo-800"
+                        href="{{route('notificaciones')}}">{{Auth::user()->unreadNotifications->count()}}</a>
+                    <p class="font-medium text-gray-600">
+                        @choice('Notificacion|Notificaciones',Auth::user()->unreadNotifications->count()) </p>
+                </div>
+                @endif
                 <div class="space-x-8">
-                @livewire('contador')
-            </div>
-                   
-                
+                    @livewire('contador')
+                </div>
+
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
 
@@ -110,7 +119,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         @auth
-            
+
         @if (auth()->user()->rol == 1)
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -120,8 +129,8 @@
         @endif
 
         <!-- Responsive Settings Options -->
-        
-            
+
+
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="text-base font-medium text-gray-800">{{ Auth::user()->name }}</div>
@@ -154,6 +163,6 @@
         </div>
 
         @endguest
-        
+
     </div>
 </nav>
